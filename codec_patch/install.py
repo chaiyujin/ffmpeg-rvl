@@ -130,7 +130,7 @@ def install_avformat(target):
     append_source(
         os.path.join(target, "matroska.c"),
         "const CodecTags ff_mkv_codec_tags[]",
-        to_write="    {\"V_RVLDEPTH\"       , AV_CODEC_ID_RVLDEPTH},",
+        to_write="    {\"V_DEPTH\"       , AV_CODEC_ID_RVLDEPTH},",
         at_start=True)
     append_source(
         os.path.join(target, "matroskaenc.c"),
