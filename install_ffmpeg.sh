@@ -6,6 +6,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --extra-libs="-lpthread -lm" \
   --bindir="$HOME/bin" \
+  --enbale-shared \
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
