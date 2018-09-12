@@ -1,11 +1,11 @@
 cd ffmpeg &&\
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+PATH="$HOME/ffmpeg_build/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
   --prefix="$HOME/ffmpeg_build" \
   --pkg-config-flags="--static" \
   --extra-cflags="-I$HOME/ffmpeg_build/include" \
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --extra-libs="-lpthread -lm" \
-  --bindir="$HOME/bin" \
+  --bindir="$HOME/ffmpeg_build/bin" \
   --enbale-shared \
   --enable-gpl \
   --enable-libass \
@@ -18,6 +18,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libx264 \
   --enable-libx265 \
   --enable-nonfree && \
-PATH="$HOME/bin:$PATH" make -j 8 && \
+PATH="$HOME/ffmpeg_build/bin:$PATH" make -j 8 && \
 make install && \
 hash -r

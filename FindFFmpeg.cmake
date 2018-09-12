@@ -30,7 +30,15 @@
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-set(FFMPEG_INSTALL_PATH "$ENV{HOME}/ffmpeg_build")
+
+if (UNIX)
+    # the install shell will install ffmpeg at $HOME/ffmpeg_build/
+    set(FFMPEG_INSTALL_PATH "$ENV{HOME}/ffmpeg_build")
+else()
+    # change $ENV{HOME} to msys2 home
+    set(MSYS_HOME "C:/msys64/home/admin")
+    set(FFMPEG_INSTALL_PATH "${MSYS_HOME}/ffmpeg_build")
+endif (UNIX)
 
 include(FindPackageHandleStandardArgs)
 
@@ -73,7 +81,7 @@ macro(find_component _component _pkgconfig _library _header)
                 HINTS "${FFMPEG_INSTALL_PATH}/include/" )
             find_library(${_component}_LIBRARIES NAMES ${_library}
                 HINTS "${FFMPEG_INSTALL_PATH}/lib/" )
-                    
+            
             # process ldflags
             if (APPLE)
             else()
@@ -86,7 +94,13 @@ macro(find_component _component _pkgconfig _library _header)
 
             set_component_found(${_component})            
         endif ()
-
+    else()
+        # in windows
+        find_path(${_component}_INCLUDE_DIRS ${_header}
+            HINTS "${FFMPEG_INSTALL_PATH}/include/" )
+        find_library(${_component}_LIBRARIES NAMES ${_library}
+            HINTS "${FFMPEG_INSTALL_PATH}/lib/")
+        set_component_found(${_component})
     endif (UNIX)
 
     mark_as_advanced(
@@ -97,9 +111,21 @@ macro(find_component _component _pkgconfig _library _header)
 
 endmacro()
 
+macro (FFMPEG_COPY_DLL projectName)
+    if (WIN32)
+        file(GLOB FFMPEG_DLLS "${FFMPEG_INSTALL_PATH}/bin/*.dll" )
+        foreach(THEDLL ${FFMPEG_DLLS})
+            message(STATUS "  |> Copy DLL: ${THEDLL}")
+            add_custom_command(TARGET ${projectName} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                # source  # target
+                ${THEDLL} $<TARGET_FILE_DIR:${projectName}>)
+        endforeach(THEDLL ${SNOW_WIN32_DLLS})
+    endif  (WIN32)
+endmacro()
 
 # Check for cached results. If there are skip the costly part.
-if (NOT FFMPEG_LIBRARIES)
+if (TRUE)
 
     # Check for all possible component.
     find_component(AVCODEC    libavcodec    avcodec    libavcodec/avcodec.h)
@@ -132,6 +158,8 @@ if (NOT FFMPEG_LIBRARIES)
     set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS} CACHE STRING "The FFmpeg include directories." FORCE)
     set(FFMPEG_LIBRARIES    ${FFMPEG_LIBRARIES}    CACHE STRING "The FFmpeg libraries." FORCE)
     set(FFMPEG_DEFINITIONS  ${FFMPEG_DEFINITIONS}  CACHE STRING "The FFmpeg cflags." FORCE)
+
+    message(STATUS "${FFMPEG_INCLUDE_DIRS}")
 
     mark_as_advanced(FFMPEG_INCLUDE_DIRS
                      FFMPEG_LIBRARIES
