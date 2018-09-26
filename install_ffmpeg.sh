@@ -1,12 +1,12 @@
 cd ffmpeg &&\
 PATH="$HOME/ffmpeg_build/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
   --prefix="$HOME/ffmpeg_build" \
-  --pkg-config-flags="--static" \
   --extra-cflags="-I$HOME/ffmpeg_build/include" \
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --extra-libs="-lpthread -lm" \
   --bindir="$HOME/ffmpeg_build/bin" \
-  --enbale-shared \
+  --disable-static \
+  --enable-shared \
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
