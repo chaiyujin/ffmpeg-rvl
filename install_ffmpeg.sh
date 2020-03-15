@@ -1,3 +1,5 @@
+sudo apt install nasm libass-dev libfdk-aac-dev libmp3lame-dev\
+		 libopus-dev libvorbis-dev libvpx-dev libx264-dev libx265-dev;
 cd ffmpeg &&\
 PATH="$HOME/ffmpeg_build/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
   --prefix="$HOME/ffmpeg_build" \
